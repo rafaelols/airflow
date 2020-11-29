@@ -21,7 +21,7 @@ dag = DAG(
     'treino-02',
     description="Extrai dados do Titanic e calcula idade media",
     default_args = default_args,
-    schedule_interval=timedelta(minutes=2)
+    schedule_interval='*/2 * * * *'
 )
 
 get_data = BashOperator(
@@ -36,7 +36,7 @@ def calculate_mean_age():
     return med
 
 def print_age(**context):
-    value = context('task_instance').xcom_pull(task_ids='calcula-idade-media')
+    value = context['task_instance'].xcom_pull(task_ids='calcula-idade-media')
     print(f'A idade media no Titanic era {value} anos.')
 
 task_idade_media = PythonOperator(
@@ -48,6 +48,7 @@ task_idade_media = PythonOperator(
 task_print_idade = PythonOperator(
     task_id='mostra-idade',
     python_callable=print_age,
+    provide_context=True,
     dag=dag
 )
 
