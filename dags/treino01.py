@@ -30,7 +30,7 @@ hello_bash = BashOperator(
     dag=dag
 )
 
-def say_hello:
+def say_hello():
     print('Hello Airflow from python')
 
 hello_python = PythonOperator(
