@@ -22,7 +22,7 @@ dag = DAG(
     'treino-03',
     description="Extrai dados do Titanic e calcula idade media para homens ou mulheres",
     default_args = default_args,
-    schedule_interval='*/2 * * * *'
+    schedule_interval='*/20 * * * *'
 )
 
 get_data = BashOperator(
@@ -55,7 +55,7 @@ male_female = BranchPythonOperator(
 )
 
 def mean_homem():
-    df = pd.read_csv('~/train.csv')
+    df = pd.read_csv('/usr/local/airflow/data/train.csv')
     med = df.loc[df.Sex == 'male'].Age.mean()
     print(f'Media de idade dos homens no Titanic: {med}')
 
@@ -66,7 +66,7 @@ branch_homem = PythonOperator(
 )
 
 def mean_mulher():
-    df = pd.read_csv('~/train.csv')
+    df = pd.read_csv('/usr/local/airflow/data/train.csv')
     med = df.loc[df.Sex == 'female'].Age.mean()
     print(f'Media de idade das mulheres no Titanic: {med}')
 
