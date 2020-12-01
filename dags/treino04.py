@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 import pandas as pd
 import random
 import zipfile
+import os
 
 # ctes
 data_path = '/usr/local/airflow/data/microdados_enade_2019/2019/3.DADOS/'
@@ -18,8 +19,8 @@ default_args = {
     'email': ['example1@example.com', 'example2@example.com'],
     'email_on_failure': False,
     'email_on_retry': False,
-    'retries': 1,
-    'Retry_delay': timedelta(minutes=1)
+#    'retries': 1,
+#    'Retry_delay': timedelta(minutes=1)
 }
 
 # Dag definition
@@ -27,7 +28,7 @@ dag = DAG(
     'treino-04',
     description="Paralelismos",
     default_args = default_args,
-    schedule_interval='*/30 * * * *'
+    schedule_interval=None
 )
 
 start_preprocessing = BashOperator(
@@ -48,8 +49,9 @@ get_data = BashOperator(
 )
 
 def unzip_file():
-    with zipfile.ZipFile('/usr/local/airflow/data/microdados_enade_2019.zip', 'r') as zipped:
-        zipped.extractall('/usr/local/airflow/data')
+    if not os.path.exists('/usr/local/airflow/data/microdados_enade_2019/'):
+        with zipfile.ZipFile('/usr/local/airflow/data/microdados_enade_2019.zip', 'r') as zipped:
+            zipped.extractall('/usr/local/airflow/data')
 
 unzip_data = PythonOperator(
     task_id='unzip_data',
