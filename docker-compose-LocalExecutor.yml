@@ -10,6 +10,8 @@ services:
             options:
                 max-size: 10m
                 max-file: "3"
+        volumes:
+            - pgairflow_data:/var/lib/postgresql/data
 
     webserver:
         image: puckel/docker-airflow:1.10.9
@@ -25,6 +27,7 @@ services:
                 max-file: "3"
         volumes:
             - ./dags:/usr/local/airflow/dags
+            - ./data:/usr/local/airflow/data
             # - ./plugins:/usr/local/airflow/plugins
         ports:
             - "8080:8080"
@@ -34,3 +37,6 @@ services:
             interval: 30s
             timeout: 30s
             retries: 3
+
+volumes:
+    pgairflow_data:
