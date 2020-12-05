@@ -15,7 +15,6 @@ services:
 
     webserver:
         image: puckel/docker-airflow:1.10.9
-        restart: always
         depends_on:
             - postgres
         environment:
